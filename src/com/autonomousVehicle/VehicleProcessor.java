@@ -26,7 +26,6 @@ abstract class VehicleMonitor extends FieldObject {
 
     public int[] coordinate(){ return coordinate; }
     public String rotation(){ return rotation; }
-//    public String[] orientation(){ return orientation; }
     public boolean state(){ return isDone; }
     public String target(){ return orientation[actionStep]; }
     public String print(){

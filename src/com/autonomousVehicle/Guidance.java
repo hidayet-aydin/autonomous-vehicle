@@ -31,37 +31,21 @@ public class Guidance extends Compute  {
     }
 
     public String newRotation(String target, String rotation){
-        String result = "";
-        switch (target){
-            case "L":
-                result = rotationLookup(rotation)[0];
-                break;
-            case "R":
-                result = rotationLookup(rotation)[1];
-                break;
-            default:
-                result = rotation;
-                break;
-        }
-        return result;
+        return switch (target) {
+            case "L" -> rotationLookup(rotation)[0];
+            case "R" -> rotationLookup(rotation)[1];
+            default -> rotation;
+        };
     }
 
     public int[] endPoint(int[] coordinate, String rotation){
         int x = coordinate[0];
         int y = coordinate[1];
-        switch (rotation){
-            case "W":
-                x -= 1;
-                break;
-            case "S":
-                y -= 1;
-                break;
-            case "E":
-                x += 1;
-                break;
-            case "N":
-                y += 1;
-                break;
+        switch (rotation) {
+            case "W" -> x -= 1;
+            case "S" -> y -= 1;
+            case "E" -> x += 1;
+            case "N" -> y += 1;
         }
         return new int[]{x, y};
     }
