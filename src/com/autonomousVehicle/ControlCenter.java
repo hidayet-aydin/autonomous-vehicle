@@ -11,7 +11,12 @@ public class ControlCenter{
         String[] strField = rawData[0].split(" ");
         field = new int[]{ Integer.parseInt(strField[0]), Integer.parseInt(strField[0])};
         for(int i = 1; i < rawData.length; i += 2) {
-            vehicles.add(new VehicleProcessor((i+1)/2, rawData[i], rawData[i+1]));
+            vehicles.add( new VehicleProcessor(
+                            (i+1)/2,
+                            rawData[i],
+                            rawData[i+1],
+                            field)
+            );
         }
     }
 

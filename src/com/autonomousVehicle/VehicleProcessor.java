@@ -1,5 +1,8 @@
 package com.autonomousVehicle;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 abstract class FieldObject {
     public int id;
     protected int[] coordinate; // X, Y
@@ -43,32 +46,49 @@ abstract class VehicleControl extends VehicleMonitor {
 
     public void editCoordinate(int[] coordinate){ this.coordinate = coordinate; }
     public void editRotation(String rotation){ this.rotation = rotation; }
+    public void stop(){ isDone = true;}
     public void step(){
-        this.actionStep++;
-        this.isDone = this.actionStep + 1 > this.orientation.length;
+        actionStep++;
+        isDone = actionStep + 1 > orientation.length;
 //        System.out.println(String.valueOf(id) +": "+ String.valueOf(actionStep) +", "+ String.valueOf(isDone));
     }
 }
 
 public class VehicleProcessor extends VehicleControl {
     private final Guidance guidance = new Guidance();
+    private int[] field;
 
-    VehicleProcessor(int id, String coordinate, String orientation) {
+    VehicleProcessor(int id, String coordinate, String orientation, int[] field) {
         super(id, coordinate, orientation);
+        this.field = field;
     }
 
     public void run(){
         if (!isDone){
-            String target = target();
-
-            if (target.equals("M")){
-                int[] endPoint = guidance.endPoint(coordinate(), rotation());
-                this.editCoordinate(endPoint);
-            } else {
-                String newRotation = guidance.newRotation(target, rotation());
-                editRotation(newRotation);
-            }
+            int[] currCoordinate = coordinate;
+            if(areaRestriction(currCoordinate)) {
+                String currTarget = target();
+                if (currTarget.equals("M")) {
+                    int[] endPoint = guidance.endPoint(currCoordinate, rotation());
+                    if (areaRestriction(endPoint)) {
+                        this.editCoordinate(endPoint);
+                    } else { return; }
+                } else {
+                    String newRotation = guidance.newRotation(currTarget, rotation());
+                    editRotation(newRotation);
+                }
+            } else { return; }
+            step();
         }
-        step();
+    }
+
+    private boolean areaRestriction(int[] endPoint){
+        boolean xCheck = 0 <= endPoint[0] && endPoint[0] <= field[0];
+        boolean yCheck = 0 <= endPoint[1] && endPoint[1] <= field[1];
+        boolean result = xCheck && yCheck;
+        if (!result)
+            System.out.println("V"+id+": "+print()+" emergency brake!");
+            stop();
+        return result;
     }
 }
