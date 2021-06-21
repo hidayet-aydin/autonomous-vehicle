@@ -55,3 +55,4 @@ The UML diagram of the developed study is as below.
 - More than 2 (as many as desired) vehicles can be added according to the input rules.
   
     ```{'Area Size', 'Vehicle 1', 'Vehicle 2', 'Vehicle 3', ...}```
+- According to area-restriction feature, vehicles can check their own position and always can stay in field.
